@@ -1,0 +1,10 @@
+﻿Docket
+- Super slow to find game
+- Question doesn't disappear
+- Allow player to hit enter to end question if they don't know the answer.
+Edge
+- Create a cascade delete to erase models from database (could be built in sql)
+- Clickable game ids that allow the user to replay particular games and holds game records of previous plays for game
+
+Up for debate
+- If game doesn't finish don't save

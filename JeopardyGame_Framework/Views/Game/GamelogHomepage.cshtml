@@ -1,0 +1,92 @@
+﻿@model List<JeopardyGame_Framework.Models.GameModel>
+
+@{
+    ViewBag.Title = "Gamelog";
+}
+
+<br />
+
+<h1 style="text-align:center">@Html.ActionLink("Play Jeopardy!", "JeopardyRound")</h1>
+
+<h2>Gamelog</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Play Date
+            </th>
+            <th>
+                Show Number
+            </th>
+            <th>
+                Correct / Incorrect / Unanswered
+            </th>
+            <th>
+                Winnings
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int j = 0; j < Model.Count; j++)
+        {
+            <tr>
+                @*rows*@
+                @for (int k = 0; k < 4; k++)
+                {
+                    if (k == 0)
+                    {
+                        <td>@Model.ElementAt(j).DatePlayed</td>@*columns*@
+                    }
+                    else if (k == 1)
+                    {
+                        <td>
+                            @*<a href="@Url.Action("GamesPlayed", "Games", new { showNumber = Model.ElementAt(j).JArchiveShowNumber, email = Model.ElementAt(j).AccountHolderEmail })">@Model.ElementAt(j).JArchiveShowNumber</a>*@
+                            @Model.ElementAt(j).ShowNumber
+                        </td>
+                    }
+                    else if (k == 2)
+                    {
+                        <td>@Model.ElementAt(j).GameTally</td>
+                    }
+                    else if (k == 3)
+                    {
+                        <td>$@Model.ElementAt(j).GameScore</td>
+                    }
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+<br />
+
+<h4 style="color:red">DIRECTIONS!!!</h4>
+<p>
+    - To get started, click on one of the number values. <br />
+    - When inputing answer, write the answer alone without a "what is" preamble. <br />
+    - The information for this website is sourced from JArchive. Unfortunately, the answers don't come in a fully standardized format so
+    the answer checking mechanism is imperfect. Therefore, incorrect answers may end up being accepted, and correct answers may end up being
+    rejected. For this reason, at the end of each game, players will be shown their guesses alongside the JArchive provided answers and then
+    allowed to override the answer checker's conclusions. This places the ultimate responsibility for fully reflective scores on the player. <br />
+    - Most games will have missing clues. The clues are missing either because the contestants never got to them in the actual Jeopardy games,
+    so they were never uncovered, or because they have some sort of picture reference, and JArchive doesn't collect those pictures.
+    - Do NOT refresh or hit the back button midgame, else the game will be deleted.
+</p>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        if (window.history) {
+            console.log(window.history);
+        }
+        if (window.history && window.history.pushState) {
+            $(window).on('popstate', function () { //called whenever active history entry changes                
+                window.location.href = "http://localhost:50550/Game/GamelogHomepage";
+                alert('Cannot go backwards from this point. Please use navbar to navigate.');
+            });
+            window.history.pushState('back', null, "http://localhost:50550/Game/GamelogHomepage");
+        }
+    </script>
+}

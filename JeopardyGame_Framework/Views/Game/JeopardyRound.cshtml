@@ -1,0 +1,97 @@
+﻿@using JeopardyGame_Framework.Models
+@model RoundModels.Jeopardy
+@{
+    ViewBag.Title = "JeopardyRound";
+}
+@*<p>@Model.testId</p> for testing*@
+
+<h4 id="clueListCount" class="hidden">@Model.JClues.Count</h4>
+
+<div id="page" style="background-color: whitesmoke" class="">
+    <h2 id="pageId">Jeopardy</h2>
+    <h2 id="roundReviewTitle" style="color:red; text-underline-position:auto" class="hidden">Round Review</h2>
+
+    <h4>Score:<h4 id="score">@Model.JeopardyScore</h4></h4>
+
+    <table class="table">
+        <thead>
+            <tr>
+                @foreach (var category in Model.JCategories)
+                {
+                    <th>
+                        @category.CategoryName
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @{ int a = 0;}
+
+            @*clue_J_C_R*@
+
+            @*j = rows*@
+            @for (int j = 1; j < 6; j++)
+            {
+                <tr>
+                    @*k = columns*@
+                    @for (int k = 1; k < 7; k++)
+                    {
+                        //first condition checks whether "a" has incremented to the number of clues available
+                        //second condition checks whether the clues' column position matches the column it should be in
+                        if (Model.JPositions.Count != a && Model.JPositions.ElementAt(a).CluePosition.Substring(7, 1) == k.ToString())
+                        {
+                            <td>
+                                <p id="@a-clue" class="hidden">@Model.JClues.ElementAt(a).ClueText</p>
+                                @*checks whether clue is a daily double*@
+                                @if (@Model.JValues.ElementAt(a).ClueValue.Length > 5)
+                                {
+                                    string value = @Model.JValues.ElementAt(a).ClueValue.Substring(0, @Model.JValues.ElementAt(a).ClueValue.Length - 2);
+
+                                    <p id="@a-dailyDoubleValue" title="@Model.JValues.ElementAt(a).ClueValue" onclick="return dailyDoubleValueClick(this.id)" name="values">@value</p> //hide value, show bet box
+
+                                    <input id="@a-dailyDoubleBet" class="hidden" placeholder="Daily Double, Bet!" type="number" autocomplete="off"
+                                           onkeydown="return event.keyCode !== 69" onkeypress="if (event.keyCode == 13 && event.keyCode !== 69)
+                                    { return dailyDoubleBet(this.id) }" /> //key down stipulation to prevent 'e' input because number allows e
+                                }
+                                else
+                                {
+                                    <p id="@a-value" onclick="regularValueClick(this.id)" name="values">@Model.JValues.ElementAt(a).ClueValue</p>
+                                }
+                                <p id="@a-answer" class="hidden">@Model.JAnswers.ElementAt(a).ClueAnswer</p>
+
+                                <p id="@a-userGuess" class="hidden"></p>
+
+                                <button id="@a-marked" onclick="return reverse(this.id)" style="border-radius:8px; color:whitesmoke" class="hidden"></button>
+
+                                <input id="@a-guessBox" class="hidden" type="text" name="guess" autocomplete="off" onkeypress="if (event.keyCode == 13) { return checkAnswer(this) }" />
+
+                                <p id="@a-result" class="hidden"></p>
+
+                                <span id="@a-timer" class="hidden"></span>
+                            </td>
+                            a++;
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button id="reviewFinished" style="width:300px; border-radius:8px; color: whitesmoke; background-color:cornflowerblue;" type="button" class="hidden">
+        Review Finished!
+    </button>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/JeopardyMethods.js")
+
+    <script>
+        @*var model = @Html.Raw(Json.Encode(Model));
+        console.log(model);*@
+    </script>
+}

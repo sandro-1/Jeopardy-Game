@@ -1,0 +1,44 @@
+﻿@using JeopardyGame_Framework.Models
+@model RoundModels.FinalJeopardy
+@{
+    ViewBag.Title = "FinalJeopardyRound";
+}
+
+<div id="page" class="">
+    <h3 id="pageId">Final Jeopardy</h3>
+    <h2 id="roundReviewTitle" style="color:red" class="hidden">Round Review</h2>
+    
+    <br />
+
+    <p id="category">Category: @Model.FJCategory</p>
+    <p id="score">You can bet up to: $@Model.FinalJeopardyScore</p>
+
+    <input id="betBox" placeholder="Place bet here" onkeypress="if (event.keyCode == 13)
+    { return finalJeopardyBetCheck(this) }" />
+
+    <p id="clue" class="hidden">@Model.FJClue</p>
+    <input id="guessBox" class="hidden" onkeypress="if (event.keyCode == 13)
+    { return finalJeopardyAnswerCheck(this) }" />
+
+    <span id="timer" class="hidden"></span>
+    
+    <p id="result"></p>
+
+    <h5 id="answer" class="hidden">@Model.FJAnswer</h5>
+
+    <h5 id="userGuess" class="hidden"></h5>
+
+    <button id="marked" onclick="return reverse(this.id)" style="border-radius:8px; color:whitesmoke" class="hidden"></button>
+
+    <button id="reviewFinished" style="width:300px; border-radius:8px; color: whitesmoke; background-color:cornflowerblue;" type="button" class="hidden">
+        Review Finished!
+    </button>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/JeopardyMethods.js")
+    <script>
+        finalJeopardyTimer(); //called immediately when page is loaded
+    </script>
+}
